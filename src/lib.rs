@@ -1,3 +1,17 @@
+/// Convert a XML input to a pretty formatted JSON
+///
+/// # Example
+/// ```
+/// use converter_test::convert;
+///
+/// let json = convert("<body><Language>Rust</Language></body>");
+///
+/// assert_eq!(json, r#"{
+///   "Language": {
+///     "$text": "Rust"
+///   }
+///}"#);
+/// ```
 pub fn convert(input: &str) -> String {
     let value: serde_json::Value = quick_xml::de::from_str(&input).unwrap();
 

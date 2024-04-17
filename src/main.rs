@@ -1,12 +1,16 @@
-use converter_test::convert;
-use std::io::{self, Read};
+use std::io::Read;
 
 fn main() {
-    let mut buffer = String::new();
-    let mut stdin = io::stdin();
-    stdin.read_to_string(&mut buffer).unwrap();
+    // Read input from stdin
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
 
-    let json = convert(&buffer);
+    // Deserialize XML to some struct
+    let value: serde_json::Value = quick_xml::de::from_str(&input).unwrap();
 
-    println!("{json}");
+    // Serialize the struct to JSON
+    let output = serde_json::to_string_pretty(&value).unwrap();
+
+    // Print to stdout
+    println!("{output}");
 }

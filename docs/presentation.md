@@ -308,6 +308,94 @@ For serializing and deserializing XML using Serde
 
 ---
 
+## Skeleton
+
+```rust
+fn main() {
+    // Read input from stdin
+
+    // Deserialize XML to some struct
+
+    // Serialize the struct to JSON
+
+    // Print to stdout
+}
+```
+
+---
+
+```rust
+use std::io::Read;
+
+fn main() {
+    // Read input from stdin
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
+
+    // ...
+}
+```
+
+---
+
+```rust
+fn main() {
+    // ...
+
+    // Deserialize XML to some struct
+    let value: serde_json::Value = quick_xml::de::from_str(&input).unwrap();
+
+    // ...
+}
+```
+
+---
+
+```rust
+fn main() {
+    // ...
+
+    // Serialize the struct to JSON
+    let output = serde_json::to_string_pretty(&value).unwrap();
+
+    // ...
+}
+```
+
+---
+
+```rust
+fn main() {
+    // ...
+
+    // Print to stdout
+    println!("{output}");
+}
+```
+
+---
+
+```rust
+use std::io::Read;
+
+fn main() {
+    // Read input from stdin
+    let mut input = String::new();
+    std::io::stdin().read_to_string(&mut input).unwrap();
+
+    // Deserialize XML to some struct
+    let value: serde_json::Value = quick_xml::de::from_str(&input).unwrap();
+
+    // Serialize the struct to JSON
+    let output = serde_json::to_string_pretty(&value).unwrap();
+
+    // Print to stdout
+    println!("{output}");
+}
+```
+
+---
+
 ## Extras
 
 ### Clap

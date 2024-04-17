@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<note>
+    <to>Dove</to>
+    <from><name>Jane</name></from>
+    <heading>Reminder</heading>
+    <body>Learn Rust this weekend!</body>
+</note>

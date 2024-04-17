@@ -1,20 +1,44 @@
 ---
 marp: true
-theme: default
-paginate: true
+author: Pieter Engelbrecht
+theme: uncover
+paginate: skip
 ---
+
+<style>
+:root {
+  --color-fg-default: #fff;
+  font-size: 1.7em;
+}
+h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+h1 {
+    font-size: 1.5em;
+}
+h2 {
+    font-size: 1.2em;
+}
+h3 {
+    font-size: 1em;
+}
+</style>
 
 # Rust Workshop
 ## A Rust command line tool to convert XML to JSON
 
 ---
 
+<!-- paginate: true -->
+
 ## Plan
 20 min - Showing fundamentals needed to complete the CLI
 40 min - to allow you all to code
 20 min - question, show and tell
 
-LINK / QR code
+https://chesedo.github.io/rust-learn-lscc
+![bg right 70%](qr.svg)
 
 ---
 
@@ -158,7 +182,7 @@ fn concat(part1: String, part2: String) -> String {
 ---
 
 ## Beginner cheats
-> These tips are only for those new to Rust!
+<span style="color: #ca880f">These tips are only for those new to Rust!</span>
 
 ```rust
 concat("hello", "world"); // Error: expected `String`, found `&str`

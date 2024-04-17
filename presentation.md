@@ -50,10 +50,14 @@ println!("What is your name?");
 
 // Reading from stdin
 let mut name = String::new();
-let mut stdin = io::stdin();
-stdin.read_to_string(&mut name).unwrap();
+std::io::stdin().read_line(&mut name).unwrap();
 
-// With variables
+// To read the whole input (use std::io::Read;)
+// std::io::stdin().read_to_string(&mut name).unwrap();
+
+let name = name.trim();
+
+// Stdout with variables
 println!("Hello {name}!");
 println!("Your name is {} characters long", name.len());
 ```
@@ -73,10 +77,10 @@ z += 1;
 
 ### Logic
 ```rust
-let can_vote = if has_id && has_photo {
-    true
+let message = if z > 10 {
+    "Greater than 10"
 } else {
-    false
+    "Less than 10"
 }; // Closing the expression with a semi-colon is important
 ```
 
@@ -103,31 +107,14 @@ while j > 0 {
 
 ---
 
-### Loops part 2
-
-```rust
-loop {
-    if some_condition {
-        break;
-    }
-
-    if something_special {
-        continue;
-    }
-
-    // "special" cases won't reach here
-}
-```
-
----
-
 ## Types
 
 ```rust
 let i: i32 = 5;   // Also has u32 and usize
-let x: f32 = 0.43 // Also has f64
+let f: f32 = 0.43 // Also has f64
 let b: bool = true;
 let s: String = "text".to_string();
+// let s = "text";
 let (a, b) = (5, 0.43);
 let v = vec![5, 2, 1];
 let h = HashMap::new();
@@ -141,12 +128,10 @@ let h = HashMap::new();
 enum Going {
     Yes,
     No,
-    Maybe,
+    Maybe(String),
 };
 
 let e = Going::Yes;
-
-// Maybe match?
 
 struct Person {
     first_name: String,
@@ -176,7 +161,7 @@ fn concat(part1: String, part2: String) -> String {
 > These tips are only for those new to Rust!
 
 ```rust
-concat("hello", "world"); // Error: expected String, got &str
+concat("hello", "world"); // Error: expected `String`, found `&str`
 
 // Just `.to_string()`
 ```
@@ -184,66 +169,118 @@ concat("hello", "world"); // Error: expected String, got &str
 ```rust
 let full_name = concat(p.first_name, p.last_name);
 
-println!("I now know your fullname {}", p.first_name); // Use of moved value
+println!("I now know your fullname {}", p.first_name); // Error: borrow / use of moved value
 
 // Just `.clone()` the first uses... or every use :)
 ```
 
+---
+
+## Beginner cheats part 2
+
 ```rust
-// Unused `Result`
+let age = "32".parse(); // We don't want a `Result`
 
 // Just `.unwrap()`
 ```
 
----
-
-## Documentation and Testing
 ```rust
-/// Joins two strings with a space
-/// 
-/// # Example
-/// ```
-/// let actual = concat("Hi".to_string(), "there".to_string());
-/// let expected = "hi there".to_string();
-/// 
-/// assert_eq!(actual, expected, "optional message");
-/// ```
-fn concat(part1: String, part2: String) -> String {
-    format!("{part1} {part2}")
-}
+// Expected reference
+// Will see in a bit?
 ```
 
----
-
-## Testing part 2
 ```rust
-#[cfg(test)]
-mod tests {}
+// Derive Debug
+println!("{p:?}"); // Error: doesn't implement `Debug`
+
+// Add `#[derive(Debug)]` on top of the struct definition
 ```
-
-> I won't cover modules so can't go here
-
 ---
 
-## Serde (https://doc.rs/serde)
+## Serde (https://docs.rs/serde)
 
-Is **Ser**ialization and **De**serialization library
+Is a **Ser**ialization and **De**serialization library
 Libraries are called crates in Rust
 This one just the generic "parent" crate with the abstractions
 So there are implementations for almost every type like:
 - JSON
 - Proto
-- XML
+- YAML
+
+```
+$ cargo add serde --features derive
+$ cargo add serde_json
+```
+
+---
+
+```rust
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Point {
+    x: i32,
+    y: i32,
+}
+```
+
+---
+
+```rust
+fn main() {
+    let point = Point { x: 1, y: 2 };
+    // Convert the Point to a JSON string.
+    let serialized = serde_json::to_string(&point).unwrap();
+
+    // Prints serialized = {"x":1,"y":2}
+    println!("serialized = {}", serialized);
+
+    // Convert the JSON string back to a Point.
+    let deserialized: Point = serde_json::from_str(&serialized).unwrap();
+
+    // Prints deserialized = Point { x: 1, y: 2 }
+    println!("deserialized = {:?}", deserialized);
+}
+
+```
 
 ---
 
 ### serde_json (https://docs.rs/serde_json)
-_Need to cover the `Value` type here as the XML needs to deserialize to it_
+Gives us access to a generic `Value` type
 
+```rust
+use serde_json::{json, Value};
+
+fn main() {
+    let point = json!({ "x": 1, "y": 2 });
+    // Convert the Point to a JSON string.
+    let serialized = serde_json::to_string(&point).unwrap();
+
+    // Prints serialized = {"x":1,"y":2}
+    println!("serialized = {}", serialized);
+
+    // Convert the JSON string back to a Point.
+    let deserialized: Value = serde_json::from_str(&serialized).unwrap();
+
+    // Prints deserialized = Point { x: 1, y: 2 }
+    println!("deserialized = {:?}", deserialized);
+}
+```
+
+---
+
+### quick-xml (https://docs.rs/quick-xml)
+```
+$ cargo add quick-xml
+```
+
+For serializing and deserializing XML using Serde
 
 ---
 
 # Now we build
+... using the building blocks covered ...
 
 ---
 

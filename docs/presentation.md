@@ -398,6 +398,120 @@ fn main() {
 
 ## Extras
 
+### Match statement
+
+```rust
+match e {
+    Going::Yes => println!("Going"),
+    Going::No => println!("Not going"),
+    Going::Maybe(reason) => println!("Might go because {reason}"),
+}
+```
+
+---
+
+### Option
+Since Rust wants to be a safe language it does not have `null`s. That means the absence of a value is strongly typed and has to be handled explicitly.
+
+```rust
+let age = Some(32);
+
+// let age: Option<i32> = None;
+
+match age {
+    Some(age) => println!("You are {age} years old"),
+    None => println!("Your age is a mystery"),
+}
+
+// Almost the same as the above
+if let Some(age) = age {
+    println!("You are {age} years old");
+} else {
+    println!("Your age is a mystery");
+}
+```
+
+---
+
 ### Clap
-### Modules / testing
-### Custom deserialize to get rid of `$text`
+
+```bash
+$ cargo add clap --features derive
+```
+
+```rust
+use clap::Parser; // Both a macro and a trait in this case
+
+/// Fancy program which greets you by name
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Optional name to be greeted by
+    #[arg(short, long)]
+    name: Option<String>,
+}
+
+fn main() {
+    let args = Args::parse();
+
+    match args.name {
+        Some(name) => println!("Hello, {}!", name),
+        None => println!("Hello, world!"),
+    }
+}
+```
+
+---
+
+# Extended build time
+Edit the solution to optionally read from a file
+... or optionally write to a file
+
+---
+
+```rust
+use std::{fs, io::Read};
+
+use clap::Parser;
+
+/// Convert XML to JSON
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// Optional file to read XML from
+    #[arg(short, long)]
+    input: Option<String>,
+}
+
+fn main() {
+    let args = Args::parse();
+
+    let xml = match args.input {
+        Some(file) => fs::read_to_string(file).expect("To be able to read the file"),
+        None => {
+            // Read input from stdin
+            let mut input = String::new();
+            std::io::stdin().read_to_string(&mut input).unwrap();
+            input
+        }
+    };
+
+    // Deserialize XML to some struct
+    let value: serde_json::Value = quick_xml::de::from_str(&xml).unwrap();
+
+    // ...
+}
+```
+
+---
+
+## Things to try at home
+- Modules and functions refactoring
+- Playing with function comments / documentation
+- Better error handling
+  - Using the `Result` type with `String` errors
+  - Switching to `anyhow` or `thiserror` crates for errors
+- Make function arguments `&str` instead of `String`
+  - Read up on the Rust ownership model
+- Custom deserialize to get rid of `$text`
+  - Look at https://serde.rs

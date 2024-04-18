@@ -49,6 +49,7 @@ https://chesedo.github.io/rust-learn-lscc
 $ cargo init
 
 # Format files in an opinionated way
+# Suggest turning it on in the IDE instead
 $ cargo fmt
 
 # Basic linting and more advance suggestions
@@ -174,8 +175,10 @@ let p = Person {
 
 ```rust
 fn concat(part1: String, part2: String) -> String {
-    // return format!("{part1}{part2}"); // Equals the below
-    format!("{part1} {part2}") // The missing semi-colon is on purpose
+    // return format!("{part1}{part2}");
+
+    // Equals the above - missing semi-colon is on purpose
+    format!("{part1} {part2}")
 }
 ```
 
@@ -210,7 +213,7 @@ let age = "32".parse(); // We don't want a `Result`
 
 ```rust
 // Expected reference
-// Will see in a bit?
+// Will see in a bit
 ```
 
 ```rust
@@ -224,6 +227,7 @@ println!("{p:?}"); // Error: doesn't implement `Debug`
 ## Serde (https://docs.rs/serde)
 
 Is a **Ser**ialization and **De**serialization library
+
 Libraries are called crates in Rust
 This one just the generic "parent" crate with the abstractions
 So there are implementations for almost every type like:
@@ -271,7 +275,7 @@ fn main() {
 ---
 
 ### serde_json (https://docs.rs/serde_json)
-Gives us access to a generic `Value` type
+Gives us access to a dynamic `Value` (JSON like) type
 
 ```rust
 use serde_json::{json, Value};
@@ -309,6 +313,10 @@ For serializing and deserializing XML using Serde
 ---
 
 ## Skeleton
+
+```bash
+$ cargo init
+```
 
 ```rust
 fn main() {
@@ -410,7 +418,7 @@ match e {
 
 ---
 
-### Option
+### Option<T>
 Since Rust wants to be a safe language it does not have `null`s. That means the absence of a value is strongly typed and has to be handled explicitly.
 
 ```rust
@@ -482,7 +490,11 @@ struct Args {
     #[arg(short, long)]
     input: Option<String>,
 }
+```
 
+---
+
+```rust
 fn main() {
     let args = Args::parse();
 
